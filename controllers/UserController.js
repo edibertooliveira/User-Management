@@ -30,34 +30,64 @@ class UserController {
       btn.disabled = true;
 
       let value = this.getValue(this.formElementUpdate);
-      let userOld = JSON.parse(tr.dataset.user);
-      console.log(userOld);
-      let result = Object.assign();
-      // 
+
+      
       let index = this.formElementUpdate.dataset.trIndex
       console.log(index, 'index');
-
+      
       let tr = this.formTarget.rows[index];
       console.log(tr, 'tr');
-      tr.dataset.user = JSON.stringify(value);
+      
+      //PEGA AS INFORMAÇÕES ANTIGAS
+      let userOld = JSON.parse(tr.dataset.user);
+      console.log(userOld, 'info');
+      
+      //MESCLA COM AS NOVAS INFORMÇÕES
+      let result = Object.assign({}, userOld, value);
+      console.log(result, 'result');
 
-      tr.innerHTML =
+        
+      this.getPhoto(this.formElementUpdate).then(
+        (content)=>{
+
+
+        //SE O 'value.photo' NÃO EXISTIR, USE O QUE ESTA NO 'userOld'
+        if(!value.photo){
+            result._photo = userOld._photo
+        } else{
+          result._photo = content;
+        }
+          //RECEBE AS NOVA INFORMAÇÕES E CONVERTE PARA STRING      
+        tr.dataset.user = JSON.stringify(result);
+
+
+        tr.innerHTML =
         `<tr>
-          <td><img src="${value.photo}" alt="User Image" class="img-circle img-sm"></td>
-          <td>${value.name}</td>
-          <td>${value.email}</td>
-          <td>${(value.admin) ? 'Sim' : 'Não'}</td>
-          <td>${Utils.dateFormat(value.register)}</td>
+          <td><img src="${result._photo}" alt="User Image" class="img-circle img-sm"></td>
+          <td>${result._name}</td>
+          <td>${result._email}</td>
+          <td>${(result._admin) ? 'Sim' : 'Não'}</td>
+          <td>${Utils.dateFormat(result._register)}</td>
           <td>
             <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
             <button type="button" class="btn btn-danger btn-excluir btn-xs btn-flat">Excluir</button>
             </td>
         </tr>
         `;
-      this.addEventsTr(tr);
-      this.updateCount();
-     
-  });
+          
+          this.addEventsTr(tr);
+          this.updateCount();
+          btn.disabled = false;
+          this.formElementCreate.reset();
+          this.outInputBoxUpdate();
+          
+        },
+        (e)=>{
+          console.error(e)
+        }
+      );
+
+    });
 
   }//!onClickCancel
 
@@ -82,7 +112,7 @@ class UserController {
       //canceled send form
       if (!value) return false;
       
-      this.getPhoto().then(
+      this.getPhoto(this.formElementCreate).then(
         (content)=>{
           value.photo = content;
           this.addLine(value);
@@ -98,14 +128,15 @@ class UserController {
   }//!onSubmit
 
 
-  getPhoto(){
+  getPhoto(formElement){
     //PROMISE PARA QUANDO DÊ CERTOU OU ERRADO
     return new Promise((resolve, reject)=>{
 
       let fileReader = new FileReader();
 
-      let elements = [...this.formElementCreate.elements].filter(item=>{
-  
+      //BUSCA ENTRE OS ARRAYS
+      let elements = [...formElement.elements].filter(item=>{
+        //SE FOR 'item.name' IGUAL A 'photo' RETORNE ESSE ITEM
         if(item.name === 'photo'){
           return item;
         }
@@ -158,8 +189,18 @@ class UserController {
   }//!addLine
 
 addEventsTr(tr){
-   // PEGA O 'TR' QUE DEVE SER ALTERADO
-   tr.querySelector('.btn-edit').addEventListener('click', e=> {
+
+  //EXCLUI 'TAG TR' DENTRO DA PAGE
+  tr.querySelector('.btn-excluir').addEventListener('click', e=> {
+    if(confirm("Deseja realmente?")){
+     tr.remove();
+     this.updateCount()
+    }
+  });
+
+
+    // PEGA O 'TR' QUE DEVE SER ALTERADO
+    tr.querySelector('.btn-edit').addEventListener('click', e=> {
     let json = JSON.parse(tr.dataset.user);  
     this.formElementUpdate.dataset.trIndex = tr.sectionRowIndex;
     
