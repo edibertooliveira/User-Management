@@ -10,7 +10,8 @@ class UserController {
     this._userNumber = document.getElementById(userNumber);
     this._adminNumber = document.getElementById(adminNumber);
     this.onSubmit();
-    this.onClickCancel()
+    this.onClickCancel();
+    this.updatePageWithData();
   }
 
   // SAI DA TELA DE EDIÇÃO USER
@@ -23,33 +24,21 @@ class UserController {
 
 
     this.formElementUpdate.addEventListener('submit', (event)=>{
-
       event.preventDefault();
       
       let btn = this.formElementUpdate.querySelector('[type=submit]');
-      btn.disabled = true;
-
       let value = this.getValue(this.formElementUpdate);
-
-      
       let index = this.formElementUpdate.dataset.trIndex
-      console.log(index, 'index');
-      
       let tr = this.formTarget.rows[index];
-      console.log(tr, 'tr');
-      
-      //PEGA AS INFORMAÇÕES ANTIGAS
       let userOld = JSON.parse(tr.dataset.user);
-      console.log(userOld, 'info');
-      
-      //MESCLA COM AS NOVAS INFORMÇÕES
       let result = Object.assign({}, userOld, value);
-      console.log(result, 'result');
-
-        
+      
+      
+      btn.disabled = true;
+      
       this.getPhoto(this.formElementUpdate).then(
         (content)=>{
-
+          
 
         //SE O 'value.photo' NÃO EXISTIR, USE O QUE ESTA NO 'userOld'
         if(!value.photo){
@@ -57,23 +46,11 @@ class UserController {
         } else{
           result._photo = content;
         }
-          //RECEBE AS NOVA INFORMAÇÕES E CONVERTE PARA STRING      
-        tr.dataset.user = JSON.stringify(result);
 
+        let user = new User();
+        user.loadFromJson(result);
 
-        tr.innerHTML =
-        `<tr>
-          <td><img src="${result._photo}" alt="User Image" class="img-circle img-sm"></td>
-          <td>${result._name}</td>
-          <td>${result._email}</td>
-          <td>${(result._admin) ? 'Sim' : 'Não'}</td>
-          <td>${Utils.dateFormat(result._register)}</td>
-          <td>
-            <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
-            <button type="button" class="btn btn-danger btn-excluir btn-xs btn-flat">Excluir</button>
-            </td>
-        </tr>
-        `;
+        tr = this.templateFromTR(user, tr)
           
           this.addEventsTr(tr);
           this.updateCount();
@@ -115,6 +92,7 @@ class UserController {
       this.getPhoto(this.formElementCreate).then(
         (content)=>{
           value.photo = content;
+          value.save()
           this.addLine(value);
           this.formElementCreate.reset();
           btn.disabled = false;
@@ -162,11 +140,60 @@ class UserController {
   }//!getPhoto
 
 
-  //ADD TAG TR DENTRO DA PAGE COM INFORMAÇÕES DOS FORMULARIOS
-  addLine(dataUser){
-    let tr = document.createElement('tr');
 
-    //Guardar informações no dataset API
+  // SE DENTRO DA LOCALSTORAGE TIVER UMA SESSÃO COM O NOME 'users',
+  // TRAGA PARA A VAREAVEL 'users',
+  // TRANSFORME EM ARRAY
+getUsersSessionStorage(){
+  let users = [];
+  if(localStorage.getItem('users')){
+    users = JSON.parse(localStorage.getItem('users'));
+  }
+  return users
+}//!getUsersSessionStorage
+
+  
+  updatePageWithData(){
+    let user = new User();
+    let users = this.getUsersSessionStorage();
+
+    users.forEach(dataUser=>{
+
+      user.loadFromJson(dataUser);
+
+      this.addLine(user);
+    })
+
+
+  }//!updatePageWithData
+
+  
+  // DÊ PUSH PARA OS NOVOS DADOS
+  // TRANSFORME EM STRING E DEVOLVA PARA O LOCALSTORAGE
+  updateFormWithData(data){
+    let users = this.getUsersSessionStorage();
+    users.push(data)
+    localStorage.setItem('users',JSON.stringify(users));
+
+  }//!updateFormWithData
+
+
+  //ADD TAG TR DENTRO DA PAGE COM INFORMAÇÕES DOS FORMULARIOS
+  // ADICIONAR AS INFORMAÇÕES DENTRO DO SESSION STORAGE
+  //Guardar informações no dataset LOCALSTORAGE
+
+  addLine(dataUser){
+    
+    let tr = this.templateFromTR(dataUser)
+    
+    this.formTarget.appendChild(tr);
+    this.updateCount();
+  }//!addLine
+
+
+  templateFromTR(dataUser, tr = null){
+
+    if(tr === null) tr = document.createElement('tr');
     tr.dataset.user = JSON.stringify(dataUser);
 
     tr.innerHTML =
@@ -182,11 +209,11 @@ class UserController {
         </td>
     </tr>
     `;
-   
+
     this.addEventsTr(tr);
-    this.formTarget.appendChild(tr);
-    this.updateCount();
-  }//!addLine
+
+    return tr
+  }
 
 addEventsTr(tr){
 
