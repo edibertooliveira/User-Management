@@ -17,16 +17,18 @@ class UserController {
   }
 
   previewFile(){
-    var file = document.querySelectorAll('input[type=file]');
-    var reader  = new FileReader();
+    let file = document.querySelectorAll('input[type=file]');
+    let preview = document.querySelector('#preview');
+    let reader  = new FileReader();
     
     file.forEach(e=>{
-      var preview = document.querySelector('#preview');
       e.addEventListener('change', ()=>{
         reader.onloadend = function () {
           preview.src = reader.result;
+          console.log('ok');
         }
         reader.readAsDataURL(e.files[0])
+        console.log('ok');
   
       })
 

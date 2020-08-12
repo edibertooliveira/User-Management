@@ -1,4 +1,4 @@
-let userController = new UserController ("form-user-update", "form-user-create", "table-users", "user-number", "admin-number", "loadImage");
+let userController = new UserController ("form-user-update", "form-user-create", "table-users", "user-number", "admin-number", "preview");
 
 
 userController;
