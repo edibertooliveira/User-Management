@@ -91,8 +91,8 @@ class User {
       users.map(u =>{
         if (u._id == this.id){
          Object.assign(u, this);
+         console.log(u);
         }
-        console.log(u);
         return u;
     })
 
@@ -104,11 +104,26 @@ class User {
 
   }//!save
 
+  // EXTRAI O ARRAY DO LOCALSTOREGE
+  // ENCONTROU, REMOVE O USER USANDO 'SPLICE'.
+  // DEVOLVE PARA O LOCALSTORAGE
+  remove(){
+    let users = User.getUsersSessionStorage();
+
+    users.forEach((dataset, index) => {
+      if(this._id == dataset._id) {
+        users.splice(index, 1);
+        console.log(dataset, index);
+      }
+    });
+    localStorage.setItem('users',JSON.stringify(users));
+
+  }//!remove
+
   // SE DENTRO DA LOCALSTORAGE TIVER UMA SESSÃO COM O NOME 'users',
   // TRAGA PARA A VAREAVEL 'users',
   // TRANSFORME EM ARRAY
-
-static  getUsersSessionStorage(){
+  static  getUsersSessionStorage(){
   let users = [];
   if(localStorage.getItem('users')){
     users = JSON.parse(localStorage.getItem('users'));

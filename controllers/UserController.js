@@ -3,19 +3,38 @@ class UserController {
   //Seletor de todos os formularios
   //Seletor que recebe novo elemento 'TR'
   //Função submit do formulario
-  constructor(formIdUpdate,formIdCreate, targetID, userNumber, adminNumber){
+  constructor(formIdUpdate,formIdCreate, targetID, userNumber, adminNumber, targetImage){
     this.formElementUpdate = document.getElementById(formIdUpdate);
     this.formElementCreate = document.getElementById(formIdCreate);
     this.formTarget = document.getElementById(targetID);
     this._userNumber = document.getElementById(userNumber);
     this._adminNumber = document.getElementById(adminNumber);
+    this.previewFile();
     this.onSubmit();
     this.onClickCancel();
     this.updatePageWithData();
+    this.imageTag = document.getElementById(targetImage);
   }
 
-  // SAI DA TELA DE EDIÇÃO USER
+  previewFile(){
+    var file = document.querySelectorAll('input[type=file]');
+    var reader  = new FileReader();
+    
+    file.forEach(e=>{
+      var preview = document.querySelector('#preview');
+      e.addEventListener('change', ()=>{
+        reader.onloadend = function () {
+          preview.src = reader.result;
+        }
+        reader.readAsDataURL(e.files[0])
+  
+      })
 
+    })
+    
+  }//!
+
+  // SAI DA TELA DE EDIÇÃO USER
   onClickCancel(){
     document.querySelector('#box-user-update .btn-default').addEventListener('click', e=> {
       this.outInputBoxUpdate();
@@ -49,9 +68,8 @@ class UserController {
 
         let user = new User();
         user.loadFromJson(result);
-
+        user.save();
         tr = this.templateFromTR(user, tr)
-          
           this.addEventsTr(tr);
           this.updateCount();
           btn.disabled = false;
@@ -65,7 +83,6 @@ class UserController {
       );
 
     });
-
   }//!onClickCancel
 
 
@@ -220,9 +237,16 @@ addEventsTr(tr){
   //EXCLUI 'TAG TR' DENTRO DA PAGE
   tr.querySelector('.btn-excluir').addEventListener('click', e=> {
     if(confirm("Deseja realmente?")){
-     tr.remove();
-     this.updateCount()
+
+      let user = new User();
+
+      user.loadFromJson(JSON.parse(tr.dataset.user))
+
+      user.remove();
+      tr.remove();
+      this.updateCount()
     }
+
   });
 
 
