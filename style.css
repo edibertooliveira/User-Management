@@ -1,15 +1,3 @@
-*{
-  list-style-type: none;
-  text-decoration: none;
-}
-
-html,
-body{
-  margin: 0;
-  padding: 0;
-
-}
-
 body {
   font-family: DINNextRoundedLTW01-Regular;
   font-weight: 60%;
