@@ -1,0 +1,164 @@
+*{
+  list-style-type: none;
+  text-decoration: none;
+}
+
+html,
+body{
+  margin: 0;
+  padding: 0;
+
+}
+
+body {
+  font-family: DINNextRoundedLTW01-Regular;
+  font-weight: 60%;
+  font-weight: 1.5rem;
+}
+a {
+  list-style-type: none;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 15px;
+  padding-right: 15px;
+  background: #343a40;
+  align-items: center;
+  height: 50px;
+
+}
+
+header > h1{
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  text-decoration: none;
+  
+}
+
+.content-header{
+  display: flex;
+  flex-direction: column;
+}
+
+.content-header h2{
+  padding: 1rem;
+}
+
+.content-header small{
+  display: block;
+  font-size: 1rem;
+ 
+
+}
+
+
+header .nav-menu{
+  display: flex;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-family: 'DINNextRoundedLTW01-Lig';
+  height: 40px;
+  width: 150px;
+  font-size: 0.8rem;
+  
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 2px
+}
+
+header .nav-menu img {
+  width: 25px;
+  height: 25px;
+  vertical-align:baseline;
+ 
+}
+header span{
+  color:#cccccc;
+  padding-left: 0.5rem;
+  font: 400 0.6rem 'Courier New';
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: none;
+  
+  
+}
+
+.breadcrumb .active{
+  padding: 0 0.5rem;
+}
+
+.main-sidebar{
+  display: none;
+}
+
+.btn {
+  width: 80px;
+  height: 48px;
+  margin: 0.2rem;
+}
+
+#table-users img,
+#table-users img{
+  max-width: 128px;
+}
+
+.statistic-row{
+  display: flex;
+  justify-content: space-around;
+  margin: 1.5rem 0;
+}
+
+.statistic-row > div {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #343a40;
+  width: 140px;
+  height: 120px;
+  color: #f8f9fa;
+}
+
+.statistic-row > div + div {
+  background: #6c757d;
+
+}
+
+.statistic-row > div h3,
+.statistic-row > div p{
+  text-align: center;
+}
+.box-body{
+  overflow: hidden;
+  overflow-x: scroll;
+}
+
+#exampleInputFile{
+  display: flex;
+}
+
+.main-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  height: 100px;
+  background: #343a40;
+  margin-top: 1.5rem;
+  padding: 0 1.5rem;
+}
+
+.main-footer a{
+  color: #fff;
+}
+
+@media(min-width:755px){
+  
+  .box-body{
+    overflow: none;
+    overflow-x: initial;
+  }
+}
