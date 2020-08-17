@@ -160,7 +160,7 @@ class UserController {
   
   updatePageWithData(){
     let user = new User();
-    let users = this.getUsersSessionStorage();
+    let users = User.getUsersSessionStorage();
 
     users.forEach(dataUser=>{
 
