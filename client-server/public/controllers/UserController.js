@@ -173,15 +173,31 @@ getUsersSessionStorage(){
 
   
   updatePageWithData(){
-    let user = new User();
-    let users = this.getUsersSessionStorage();
 
-    users.forEach(dataUser=>{
+    HttpRequest.get('/users').then(data=>{
 
-      user.loadFromJson(dataUser);
+      data.users.forEach(dataUser=>{
+      
+        let user = new User();
+        user.loadFromJson(dataUser);
+    
+          this.addLine(user);
+        });
+    });
 
-      this.addLine(user);
-    })
+    // let users = this.getUsersSessionStorage();
+    // 
+    // obj.users.forEach(dataUser=>{
+    
+    //   let user = new User();
+    //   user.loadFromJson(dataUser);
+  
+    //     this.addLine(user);
+    //   });
+
+    
+    // }
+    
 
 
   }//!updatePageWithData
