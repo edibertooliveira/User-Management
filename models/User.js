@@ -123,10 +123,11 @@ class User {
   // SE DENTRO DA LOCALSTORAGE TIVER UMA SESSÃO COM O NOME 'users',
   // TRAGA PARA A VAREAVEL 'users',
   // TRANSFORME EM ARRAY
-  static  getUsersSessionStorage(){
+  static getUsersSessionStorage(){
   let users = [];
   if(localStorage.getItem('users')){
     users = JSON.parse(localStorage.getItem('users'));
+    console.log(users);
   }
   return users
 }//!getUsersSessionStorage

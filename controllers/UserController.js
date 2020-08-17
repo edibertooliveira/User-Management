@@ -9,11 +9,11 @@ class UserController {
     this.formTarget = document.getElementById(targetID);
     this._userNumber = document.getElementById(userNumber);
     this._adminNumber = document.getElementById(adminNumber);
+    this.imageTag = document.getElementById(targetImage);
     this.previewFile();
     this.onSubmit();
     this.onClickCancel();
     this.updatePageWithData();
-    this.imageTag = document.getElementById(targetImage);
   }
 
   previewFile(){
@@ -152,54 +152,25 @@ class UserController {
 
         fileReader.readAsDataURL(file);
       }else{
-        resolve('dist/img/boxed-bg.jpg');
+        resolve('assets/images/boxed-bg.jpg');
       }
 
     });
   }//!getPhoto
-
-
-
-  // SE DENTRO DA LOCALSTORAGE TIVER UMA SESSÃO COM O NOME 'users',
-  // TRAGA PARA A VAREAVEL 'users',
-  // TRANSFORME EM ARRAY
-getUsersSessionStorage(){
-  let users = [];
-  if(localStorage.getItem('users')){
-    users = JSON.parse(localStorage.getItem('users'));
-  }
-  return users
-}//!getUsersSessionStorage
-
   
   updatePageWithData(){
+    let user = new User();
 
-    HttpRequest.get('/users').then(data=>{
+    let users = user.getUsersSessionStorage();
+    console.log('users');
+    users.forEach(dataUser=>{
 
-      data.users.forEach(dataUser=>{
-      
-        let user = new User();
-        user.loadFromJson(dataUser);
-    
-          this.addLine(user);
-        });
+
+        user.loadFromJSON(dataUser);
+
+        this.addLine(user);
+
     });
-
-    // let users = this.getUsersSessionStorage();
-    // 
-    // obj.users.forEach(dataUser=>{
-    
-    //   let user = new User();
-    //   user.loadFromJson(dataUser);
-  
-    //     this.addLine(user);
-    //   });
-
-    
-    // }
-    
-
-
   }//!updatePageWithData
 
   
