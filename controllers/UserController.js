@@ -9,11 +9,11 @@ class UserController {
     this.formTarget = document.getElementById(targetID);
     this._userNumber = document.getElementById(userNumber);
     this._adminNumber = document.getElementById(adminNumber);
-    this.imageTag = document.getElementById(targetImage);
     this.previewFile();
     this.onSubmit();
     this.onClickCancel();
     this.updatePageWithData();
+    this.imageTag = document.getElementById(targetImage);
   }
 
   previewFile(){
@@ -160,17 +160,16 @@ class UserController {
   
   updatePageWithData(){
     let user = new User();
+    let users = this.getUsersSessionStorage();
 
-    let users = user.getUsersSessionStorage();
-    console.log('users');
     users.forEach(dataUser=>{
 
+      user.loadFromJson(dataUser);
 
-        user.loadFromJSON(dataUser);
+      this.addLine(user);
+    })
 
-        this.addLine(user);
 
-    });
   }//!updatePageWithData
 
   
